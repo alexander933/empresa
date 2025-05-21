@@ -28,6 +28,7 @@ conexion.connect(err => {
 
 // =================== CLIENTES ===================
 
+//GET - Consultar cliente
 app.get('/clientes', (req, res) => {
   console.log('🔍 Solicitando todos los clientes...');
 
@@ -38,6 +39,29 @@ app.get('/clientes', (req, res) => {
     } else {
       console.log('✅ Clientes obtenidos correctamente:', results.length, 'registro(s) encontrados.');
       res.status(200).json(results);
+    }
+  });
+});
+
+//GET - consultar cliente individual
+app.get('/clientes/:id', (req, res) => {
+  const id = req.params.id;
+  console.log(`🔍 Solicitando cliente con ID ${id}...`);
+
+  const query = 'SELECT * FROM clientes WHERE id = ?';
+
+  conexion.query(query, [id], (err, results) => {
+    if (err) {
+      console.error(`❌ Error al obtener el cliente ID ${id}:`, err);
+      res.status(500).send(`Error al obtener el cliente ID ${id}`);
+    } else {
+      if (results.length === 0) {
+        console.warn(`⚠️ Cliente ID ${id} no encontrado.`);
+        res.status(404).send(`Cliente ID ${id} no encontrado`);
+      } else {
+        console.log(`✅ Cliente ID ${id} obtenido correctamente.`);
+        res.status(200).json(results[0]); // Solo uno
+      }
     }
   });
 });
