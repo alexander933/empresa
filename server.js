@@ -8,6 +8,8 @@ const PORT = 3000;
 
 app.use(bodyParser.json());
 app.use(express.json());
+const path = require('path');
+app.use(express.static(path.join(__dirname, 'cliente-app')));
 
 
 // Conexión a MySQL (XAMPP)
