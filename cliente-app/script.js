@@ -17,7 +17,8 @@ function cargarClientes() {
       clientes.forEach(cliente => {
         const li = document.createElement('li');
         li.innerHTML = `
-          <strong>${cliente.nombre_completo}</strong> - ${cliente.correo_electronico} - ${cliente.telefono}
+        <strong>ID:</strong> ${cliente.id} <br>
+        <strong>${cliente.nombre_completo}</strong> - ${cliente.correo_electronico} - ${cliente.telefono}
           <span class="acciones">
             <button onclick="editarCliente(${cliente.id}, '${cliente.nombre_completo}', '${cliente.correo_electronico}', '${cliente.telefono}')">Editar</button>
             <button onclick="eliminarCliente(${cliente.id})">Eliminar</button>
