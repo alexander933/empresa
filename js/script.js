@@ -55,10 +55,12 @@ function guardarCliente(e) {
 }
 
 function editarCliente(id, nombre, correo, telefono) {
+  if (confirm('¿Estás seguro de que deseas editar este cliente?')){
   document.getElementById('clienteId').value = id;
   document.getElementById('nombre').value = nombre;
   document.getElementById('correo').value = correo;
   document.getElementById('telefono').value = telefono;
+}
 }
 
 function eliminarCliente(id) {
