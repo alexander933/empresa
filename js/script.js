@@ -51,8 +51,18 @@ function guardarCliente(e) {
     .then(() => {
       document.getElementById('clienteForm').reset();
       cargarClientes();
+     if (metodo === 'POST') {
+        alert('✅ Cliente creado con éxito');
+      } else {
+        alert('✏️ Cliente actualizado con éxito');
+      }
+    })
+    .catch(error => {
+      console.error('Error en la solicitud:', error);
+      alert('❌ Hubo un error al guardar el cliente');
     });
 }
+    
 
 function editarCliente(id, nombre, correo, telefono) {
   if (confirm('¿Estás seguro de que deseas editar este cliente?')){
