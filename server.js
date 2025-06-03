@@ -80,6 +80,7 @@ app.post('/clientes', (req, res) => {
       console.error('Error al crear el cliente:', err);
       res.status(500).send('Error al crear el cliente');
     } else {
+      console.log('✅ Usuario creado con éxito (ID:', result.insertId + ')');
       res.status(201).json({
         id: result.insertId,
         nombre_completo,
