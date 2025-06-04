@@ -3,40 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gestión de Clientes</title>
+  <title>Inicio</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    input, button { margin: 5px; padding: 8px; }
-    ul { list-style: none; padding: 0; }
-    li { margin-bottom: 10px; }
-    .acciones button { margin-left: 5px; }
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      margin-bottom: 40px;
+    }
+
+    .botones {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .botones button {
+      padding: 15px 30px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      transition: background-color 0.3s;
+    }
+
+    .botones button:hover {
+      background-color: #0056b3;
+    }
   </style>
 </head>
 <body>
-  <h1>Clientes</h1>
-
-  <form id="clienteForm">
-    <input type="hidden" id="clienteId" />
-    <input type="text" id="nombre" placeholder="Nombre completo" required />
-    <input type="email" id="correo" placeholder="Correo electrónico" required />
-    <input type="text" id="telefono" placeholder="Teléfono" required />
-    <button type="submit">Guardar Cliente</button>
-  </form>
-
-  <h2>Lista de Clientes</h2>
-  <table>
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Correo</th>
-      <th>Teléfono</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody id="listaClientes"></tbody>
-</table>
-
-
-  <script src="js/script.js"></script>
+  <h1>Menú Principal</h1>
+  <div class="botones">
+    <button onclick="location.href='Clientes.html'">Clientes</button>
+    <button onclick="location.href='productos.html'">Producto</button>
+    <button onclick="location.href='pedidos.html'">Pedido</button>
+  </div>
 </body>
 </html>

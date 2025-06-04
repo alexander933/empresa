@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Clientes</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    input, button { margin: 5px; padding: 8px; }
+    ul { list-style: none; padding: 0; }
+    li { margin-bottom: 10px; }
+    .acciones button { margin-left: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Clientes</h1>
+
+  <form id="clienteForm">
+    <input type="hidden" id="clienteId" />
+    <input type="text" id="nombre" placeholder="Nombre completo" required />
+    <input type="email" id="correo" placeholder="Correo electrónico" required />
+    <input type="text" id="telefono" placeholder="Teléfono" required />
+    <button type="submit">Guardar Cliente</button>
+  </form>
+
+  <h2>Lista de Clientes</h2>
+  <table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Correo</th>
+      <th>Teléfono</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody id="listaClientes"></tbody>
+</table>
+
+
+  <script src="js/script.js"></script>
+</body>
+</html>
