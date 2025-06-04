@@ -1,0 +1,59 @@
+/* Estilos generales para index.html */
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 50px;
+  background-color: #f4f4f4;
+}
+
+h1 {
+  margin-bottom: 40px;
+}
+
+.botones {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.botones button {
+  padding: 15px 30px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.botones button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilos para clientes.html */
+body.clientes {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: white;
+  padding: 0;
+  text-align: left;
+}
+
+input, button {
+  margin: 5px;
+  padding: 8px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+.acciones button {
+  margin-left: 5px;
+}
