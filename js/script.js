@@ -11,23 +11,25 @@ function cargarClientes() {
   fetch(apiUrl)
     .then(res => res.json())
     .then(clientes => {
-      const lista = document.getElementById('listaClientes');
-      lista.innerHTML = '';
+      const tabla = document.getElementById('listaClientes');
+      tabla.innerHTML = '';
 
       clientes.forEach(cliente => {
-        const li = document.createElement('li');
-        li.innerHTML = `
-        <strong>ID:</strong> ${cliente.id} <br>
-        <strong>${cliente.nombre_completo}</strong> - ${cliente.correo_electronico} - ${cliente.telefono}
-          <span class="acciones">
-            <button onclick="editarCliente(${cliente.id}, '${cliente.nombre_completo}', '${cliente.correo_electronico}', '${cliente.telefono}')">Editar</button>
-            <button onclick="eliminarCliente(${cliente.id})">Eliminar</button>
-          </span>
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+          <td>${cliente.nombre_completo}</td>
+          <td>${cliente.correo_electronico}</td>
+          <td>${cliente.telefono}</td>
+          <td class="acciones">
+            <button onclick="editarCliente(${cliente.id}, '${cliente.nombre_completo}', '${cliente.correo_electronico}', '${cliente.telefono}')">✏️</button>
+            <button onclick="eliminarCliente(${cliente.id})">🗑️</button>
+          </td>
         `;
-        lista.appendChild(li);
+        tabla.appendChild(fila);
       });
     });
 }
+
 
 function guardarCliente(e) {
   e.preventDefault();
