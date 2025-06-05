@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Pedidos</title>
+  <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body class="clientes">
+  <h1>Pedidos</h1>
+
+  <form id="pedidoForm">
+    <input type="hidden" id="pedidoId" />
+    <input type="date" id="fechaPedido" required />
+    <input type="date" id="fechaEntrega" required />
+    <button type="submit">Guardar Pedido</button>
+  </form>
+
+  <h2>Lista de Pedidos</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Fecha de Pedido</th>
+        <th>Fecha de Entrega</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="listaPedidos"></tbody>
+  </table>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

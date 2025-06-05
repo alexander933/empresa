@@ -216,23 +216,43 @@ app.delete('/productos/:id', (req, res) => {
 
 // =================== PEDIDOS ===================
 
-// GET - Obtener pedidos
+// GET - Obtener todos los pedidos
 app.get('/pedidos', (req, res) => {
+  console.log('🔍 Solicitando todos los pedidos...');
   conexion.query('SELECT * FROM pedido', (err, results) => {
+    if (err) {
+      console.error('❌ Error al obtener pedidos:', err);
+      return res.status(500).json({ error: err.message });
+    }
+    console.log(`✅ ${results.length} pedido(s) encontrado(s).`);
+    res.status(200).json(results);
+  });
+});
+
+// GET - Obtener pedido por ID
+app.get('/pedidos/:id', (req, res) => {
+  const id = req.params.id;
+  conexion.query('SELECT * FROM pedido WHERE id = ?', [id], (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.json(results);
+    if (results.length === 0) {
+      return res.status(404).json({ mensaje: `Pedido ID ${id} no encontrado.` });
+    }
+    res.status(200).json(results[0]);
   });
 });
 
 // POST - Crear pedido
 app.post('/pedidos', (req, res) => {
   const { fecha_pedido, fecha_entrega } = req.body;
+  console.log('🆕 Datos para nuevo pedido:', req.body);
+
   conexion.query(
     'INSERT INTO pedido (fecha_pedido, fecha_entrega) VALUES (?, ?)',
     [fecha_pedido, fecha_entrega],
     (err, result) => {
       if (err) return res.status(500).json({ error: err.message });
-      res.json({ mensaje: 'Pedido creado', id: result.insertId });
+      console.log(`✅ Pedido creado con ID: ${result.insertId}`);
+      res.status(201).json({ id: result.insertId, fecha_pedido, fecha_entrega });
     }
   );
 });
@@ -241,11 +261,13 @@ app.post('/pedidos', (req, res) => {
 app.put('/pedidos/:id', (req, res) => {
   const id = req.params.id;
   const { fecha_pedido, fecha_entrega } = req.body;
+
   conexion.query(
     'UPDATE pedido SET fecha_pedido = ?, fecha_entrega = ? WHERE id = ?',
     [fecha_pedido, fecha_entrega, id],
     (err) => {
       if (err) return res.status(500).json({ error: err.message });
+      console.log(`✅ Pedido ID ${id} actualizado correctamente.`);
       res.json({ mensaje: `Pedido ID ${id} actualizado.` });
     }
   );
@@ -254,11 +276,16 @@ app.put('/pedidos/:id', (req, res) => {
 // DELETE - Eliminar pedido
 app.delete('/pedidos/:id', (req, res) => {
   const id = req.params.id;
-  conexion.query('DELETE FROM pedido WHERE id = ?', [id], (err) => {
+  conexion.query('DELETE FROM pedido WHERE id = ?', [id], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ mensaje: `Pedido ID ${id} no encontrado.` });
+    }
+    console.log(`✅ Pedido ID ${id} eliminado.`);
     res.json({ mensaje: `Pedido ID ${id} eliminado.` });
   });
 });
+
 
 // =================== RUTA DE PRUEBA ===================
 app.get('/', (req, res) => {

@@ -17,6 +17,7 @@ function cargarClientes() {
       clientes.forEach(cliente => {
         const fila = document.createElement('tr');
         fila.innerHTML = `
+          <td>${cliente.id}</td>
           <td>${cliente.nombre_completo}</td>
           <td>${cliente.correo_electronico}</td>
           <td>${cliente.telefono}</td>
@@ -29,7 +30,6 @@ function cargarClientes() {
       });
     });
 }
-
 
 function guardarCliente(e) {
   e.preventDefault();
@@ -106,6 +106,7 @@ function cargarProductos() {
       productos.forEach(p => {
         const fila = document.createElement('tr');
         fila.innerHTML = `
+          <td>${p.id}</td>
           <td>${p.nombre_producto}</td>
           <td>${p.serial}</td>
           <td class="acciones">
@@ -117,6 +118,7 @@ function cargarProductos() {
       });
     });
 }
+
 
 function guardarProducto(e) {
   e.preventDefault();
@@ -158,6 +160,88 @@ function eliminarProducto(id) {
     })
       .then(res => res.json())
       .then(() => cargarProductos());
+  }
+}
+
+
+
+const pedidosApiUrl = 'http://localhost:3000/pedidos';
+
+document.addEventListener('DOMContentLoaded', () => {
+  const pedidoForm = document.getElementById('pedidoForm');
+  if (pedidoForm) {
+    cargarPedidos();
+    pedidoForm.addEventListener('submit', guardarPedido);
+  }
+});
+
+function cargarPedidos() {
+  fetch(pedidosApiUrl)
+    .then(res => res.json())
+    .then(pedidos => {
+      const tabla = document.getElementById('listaPedidos');
+      tabla.innerHTML = '';
+
+      pedidos.forEach(p => {
+        // Formatear fechas simplificadas
+        const fechaPedido = new Date(p.fecha_pedido).toISOString().split('T')[0];
+        const fechaEntrega = new Date(p.fecha_entrega).toISOString().split('T')[0];
+
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+          <td>${p.id}</td>
+          <td>${fechaPedido}</td>
+          <td>${fechaEntrega}</td>
+          <td class="acciones">
+            <button onclick="editarPedido(${p.id}, '${fechaPedido}', '${fechaEntrega}')">✏️</button>
+            <button onclick="eliminarPedido(${p.id})">🗑️</button>
+          </td>
+        `;
+        tabla.appendChild(fila);
+      });
+    });
+}
+
+
+function guardarPedido(e) {
+  e.preventDefault();
+
+  const id = document.getElementById('pedidoId').value;
+  const fechaPedido = document.getElementById('fechaPedido').value;
+  const fechaEntrega = document.getElementById('fechaEntrega').value;
+
+  const pedido = { fecha_pedido: fechaPedido, fecha_entrega: fechaEntrega };
+  const metodo = id ? 'PUT' : 'POST';
+  const url = id ? `${pedidosApiUrl}/${id}` : pedidosApiUrl;
+
+  fetch(url, {
+    method: metodo,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(pedido)
+  })
+    .then(res => res.json())
+    .then(() => {
+      document.getElementById('pedidoForm').reset();
+      cargarPedidos();
+      alert(metodo === 'POST' ? '✅ Pedido creado' : '✏️ Pedido actualizado');
+    });
+}
+
+function editarPedido(id, fechaPedido, fechaEntrega) {
+  if (confirm('¿Editar este pedido?')) {
+    document.getElementById('pedidoId').value = id;
+    document.getElementById('fechaPedido').value = fechaPedido;
+    document.getElementById('fechaEntrega').value = fechaEntrega;
+  }
+}
+
+function eliminarPedido(id) {
+  if (confirm('¿Eliminar este pedido?')) {
+    fetch(`${pedidosApiUrl}/${id}`, {
+      method: 'DELETE'
+    })
+      .then(res => res.json())
+      .then(() => cargarPedidos());
   }
 }
 
