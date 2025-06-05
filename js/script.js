@@ -84,3 +84,80 @@ function eliminarCliente(id) {
       .then(() => cargarClientes());
   }
 }
+
+
+const productosApiUrl = 'http://localhost:3000/productos';
+
+document.addEventListener('DOMContentLoaded', () => {
+  const productoForm = document.getElementById('productoForm');
+  if (productoForm) {
+    cargarProductos();
+    productoForm.addEventListener('submit', guardarProducto);
+  }
+});
+
+function cargarProductos() {
+  fetch(productosApiUrl)
+    .then(res => res.json())
+    .then(productos => {
+      const tabla = document.getElementById('listaProductos');
+      tabla.innerHTML = '';
+
+      productos.forEach(p => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+          <td>${p.nombre_producto}</td>
+          <td>${p.serial}</td>
+          <td class="acciones">
+            <button onclick="editarProducto(${p.id}, '${p.nombre_producto}', '${p.serial}')">✏️</button>
+            <button onclick="eliminarProducto(${p.id})">🗑️</button>
+          </td>
+        `;
+        tabla.appendChild(fila);
+      });
+    });
+}
+
+function guardarProducto(e) {
+  e.preventDefault();
+
+  const id = document.getElementById('productoId').value;
+  const nombre = document.getElementById('nombreProducto').value;
+  const serial = document.getElementById('serial').value;
+
+  const producto = { nombre_producto: nombre, serial };
+
+  const metodo = id ? 'PUT' : 'POST';
+  const url = id ? `${productosApiUrl}/${id}` : productosApiUrl;
+
+  fetch(url, {
+    method: metodo,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(producto)
+  })
+    .then(res => res.json())
+    .then(() => {
+      document.getElementById('productoForm').reset();
+      cargarProductos();
+      alert(metodo === 'POST' ? '✅ Producto creado con éxito' : '✏️ Producto actualizado');
+    });
+}
+
+function editarProducto(id, nombre, serial) {
+  if (confirm('¿Editar este producto?')) {
+    document.getElementById('productoId').value = id;
+    document.getElementById('nombreProducto').value = nombre;
+    document.getElementById('serial').value = serial;
+  }
+}
+
+function eliminarProducto(id) {
+  if (confirm('¿Eliminar este producto?')) {
+    fetch(`${productosApiUrl}/${id}`, {
+      method: 'DELETE'
+    })
+      .then(res => res.json())
+      .then(() => cargarProductos());
+  }
+}
+

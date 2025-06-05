@@ -140,21 +140,43 @@ app.delete('/clientes/:id', (req, res) => {
 
 // GET - Obtener productos
 app.get('/productos', (req, res) => {
+  console.log('🔍 Solicitando todos los productos...');
   conexion.query('SELECT * FROM productos', (err, results) => {
+    if (err) {
+      console.error('❌ Error al obtener productos:', err);
+      return res.status(500).json({ error: err.message });
+    }
+    console.log(`✅ ${results.length} producto(s) encontrado(s).`);
+    res.status(200).json(results);
+  });
+});
+
+// GET - Obtener un producto por ID
+app.get('/productos/:id', (req, res) => {
+  const id = req.params.id;
+  console.log(`🔍 Solicitando producto ID ${id}...`);
+
+  conexion.query('SELECT * FROM productos WHERE id = ?', [id], (err, results) => {
     if (err) return res.status(500).json({ error: err.message });
-    res.json(results);
+    if (results.length === 0) {
+      return res.status(404).json({ mensaje: `Producto ID ${id} no encontrado.` });
+    }
+    res.status(200).json(results[0]);
   });
 });
 
 // POST - Crear producto
 app.post('/productos', (req, res) => {
   const { nombre_producto, serial } = req.body;
+  console.log('🆕 Datos recibidos para crear producto:', req.body);
+
   conexion.query(
     'INSERT INTO productos (nombre_producto, serial) VALUES (?, ?)',
     [nombre_producto, serial],
     (err, result) => {
       if (err) return res.status(500).json({ error: err.message });
-      res.json({ mensaje: 'Producto agregado', id: result.insertId });
+      console.log(`✅ Producto creado con ID: ${result.insertId}`);
+      res.status(201).json({ id: result.insertId, nombre_producto, serial });
     }
   );
 });
@@ -163,11 +185,14 @@ app.post('/productos', (req, res) => {
 app.put('/productos/:id', (req, res) => {
   const id = req.params.id;
   const { nombre_producto, serial } = req.body;
+  console.log(`✏️ Actualizando producto ID ${id}...`);
+
   conexion.query(
     'UPDATE productos SET nombre_producto = ?, serial = ? WHERE id = ?',
     [nombre_producto, serial, id],
     (err) => {
       if (err) return res.status(500).json({ error: err.message });
+      console.log(`✅ Producto ID ${id} actualizado correctamente.`);
       res.json({ mensaje: `Producto ID ${id} actualizado.` });
     }
   );
@@ -176,11 +201,18 @@ app.put('/productos/:id', (req, res) => {
 // DELETE - Eliminar producto
 app.delete('/productos/:id', (req, res) => {
   const id = req.params.id;
-  conexion.query('DELETE FROM productos WHERE id = ?', [id], (err) => {
+  console.log(`🗑️ Eliminando producto ID ${id}...`);
+
+  conexion.query('DELETE FROM productos WHERE id = ?', [id], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ mensaje: `Producto ID ${id} no encontrado.` });
+    }
+    console.log(`✅ Producto ID ${id} eliminado.`);
     res.json({ mensaje: `Producto ID ${id} eliminado.` });
   });
 });
+
 
 // =================== PEDIDOS ===================
 
